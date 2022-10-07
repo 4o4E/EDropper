@@ -17,4 +17,7 @@ object Config : EConfig(
 
     val lowest: Int
         get() = config.getInt("lowest")
+
+    val world: String
+        get() = config.getString("world") ?: "game"
 }
