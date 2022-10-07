@@ -1,0 +1,18 @@
+# 地图组名
+example_group:
+  # 是否允许重复
+  allow_repeat: true
+  # 原理图
+  schematics:
+    # 文件名: 权重
+    example1.schem: 20
+    example2.schem: 30
+
+group1:
+  allow_repeat: true
+  schematics:
+    iron.schem: 1
+    golden.schem: 1
+    diamond.schem: 1
+    netherite.schem: 1
+    obsidian.schem: 1

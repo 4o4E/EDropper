@@ -1,0 +1,17 @@
+# 游戏id
+example_game:
+  # 是否允许重复
+  repeat: false
+  # 游戏使用的地图数, 若允许重复则总数不足的会重复, 否则每个组最多出现一次
+  amount: 2
+  # 顶层地图
+  top: example_top.schem
+  # 底层地图
+  bottom: example_bottom.schem
+  # 游戏地图组
+  group:
+    # 地图组名: 选中的概率
+    example_group: 20
+    group1: 30
+  # 通关分值
+  score: 10

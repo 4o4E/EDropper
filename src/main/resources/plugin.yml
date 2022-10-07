@@ -1,0 +1,17 @@
+name: EDropper
+version: "${version}"
+main: top.e404.edropper.EDropper
+api-version: 1.13
+depend:
+  - WorldEdit
+authors:
+  - 404E
+commands:
+  edropper:
+    description: 插件主命令
+    aliases:
+      - ed
+permissions:
+  edropper.admin:
+    default: op
+    description: 允许使用插件指令
