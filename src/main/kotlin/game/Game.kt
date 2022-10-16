@@ -2,10 +2,13 @@ package top.e404.edropper.game
 
 import com.sk89q.worldedit.WorldEdit
 import com.sk89q.worldedit.extent.clipboard.Clipboard
+import org.bukkit.EntityEffect
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerTeleportEvent
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import top.e404.edropper.PL
 import top.e404.edropper.config.Config
 import top.e404.edropper.config.GameConfig
@@ -41,13 +44,18 @@ class Game private constructor(
     /**
      * 游戏占用的物理区域
      */
-    val locations = mutableSetOf<GameLocation>()
+    val locations = mutableListOf<GameLocation>()
 
     /**
-     * 申请一块区域并清空
+     * 当前游戏中的游戏区域
+     */
+    var currentlyLocation = 0
+
+    /**
+     * 申请一块区域
      */
     fun applyLocation() = GameManager.getAndUse(this) {
-        it.clear()
+        //it.clear()
     }
 
     /**
@@ -118,22 +126,55 @@ class Game private constructor(
      */
     fun onMove(event: PlayerMoveEvent) {
         if (!state.listen) return
-        PL.sendMsgWithPrefix(p, "state: $state, listen: ${state.listen} startY: $startY")
         val to = event.to ?: return
         // 阻止跨世界传送
         if (event is PlayerTeleportEvent && event.to!!.world != event.from.world) {
+            PL.debug { "阻止跨世界传送" }
             event.isCancelled = true
             PL.sendMsgWithPrefix(p, Lang["game.prevent_teleport"])
             return
         }
         // 开始下落
         if (state == GameState.PREPARE && to.y < startY) {
+            PL.debug { "开始下落" }
             state = GameState.GAMING
             config.command.onStart(p)
             return
         }
+        // 转场
+        if (to.y < Config.lowest) {
+            PL.debug { "转场" }
+            println(to)
+            var current = locations[currentlyLocation]
+            println(current)
+            val l = to.add(
+                -current.centerX.toDouble(),
+                0.0,
+                -current.centerZ.toDouble(),
+            )
+            current = locations[++currentlyLocation]
+            println(current)
+            l.add(
+                current.centerX.toDouble(),
+                0.0,
+                current.centerZ.toDouble(),
+            )
+            l.y = Config.highest.toDouble()
+            println(l)
+            p.teleport(l)
+            // 缓降
+            p.addPotionEffect(PotionEffect(
+                PotionEffectType.SLOW_FALLING,
+                20 * 3,
+                0,
+                false,
+                false
+            ))
+            return
+        }
         val block = p.location.add(0.0, -0.2, 0.0).block
         if (block.isEmpty) return
+        PL.sendMsgWithPrefix(p, "state: $state, x: ${to.x}, y: ${to.y} z: ${to.z}, block: ${block.type.name}")
         if (block.type.name.formatAsConst() in config.target) {
             config.command.onSuccess(p)
             stop()

@@ -58,7 +58,12 @@ object GameManager {
         while (true) {
             if (i == 0) {
                 val key = GameLocation(0, 0)
-                if (!locations.containsKey(key)) return key
+                if (!locations.containsKey(key)) {
+                    locations[key] = game
+                    game.locations.add(key)
+                    block(key)
+                    return key
+                }
             }
             for (x in -i..i) for (y in -i..i) {
                 if (x != -i

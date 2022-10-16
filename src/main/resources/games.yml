@@ -44,6 +44,9 @@ example_game:
     # 玩家开始游戏时执行的指令(跳下)
     start:
       - tell %player_name% 你已开始游戏
+    # 游戏转场时执行的指令
+    transition:
+      - tell %player_name% 转场
     # 玩家失败
     fail:
       - tell %player_name% 你失败了

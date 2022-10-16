@@ -125,6 +125,7 @@ data class MapGroupConfig(
  *
  * @property enter 玩家进入游戏时执行的指令
  * @property start 游戏开始(玩家开始下落)时执行的指令
+ * @property transition 游戏转场(玩家传送到下一场地)时执行的指令
  * @property fail 游戏失败(掉落在非指定方块上)时执行的指令
  * @property success 游戏成功(掉落在指定方块上)时执行的指令
  */
@@ -132,6 +133,7 @@ data class MapGroupConfig(
 data class CommandConfig(
     val enter: MutableList<String>,
     val start: MutableList<String>,
+    val transition: MutableList<String>,
     val fail: MutableList<String>,
     val success: MutableList<String>
 ) {

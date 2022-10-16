@@ -4,6 +4,8 @@ main: top.e404.edropper.EDropper
 api-version: 1.13
 depend:
   - WorldEdit
+softdepend:
+  - PlaceholderAPI
 authors:
   - 404E
 commands:
