@@ -22,8 +22,6 @@ repositories {
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     // engine hub
     maven("https://maven.enginehub.org/repo/")
-    // papi
-    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     mavenCentral()
 }
 
