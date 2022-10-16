@@ -6,4 +6,5 @@ import top.e404.eplugin.hook.EHookManager
 object HookManager : EHookManager(
     plugin = PL,
     WeHook,
+    PapiHook,
 )

@@ -1,12 +1,12 @@
 package top.e404.edropper
 
 import top.e404.edropper.command.Commands
-import top.e404.eplugin.EPlugin
 import top.e404.edropper.config.Config
 import top.e404.edropper.config.GameConfigManager
 import top.e404.edropper.config.Lang
+import top.e404.edropper.config.SchemGroupManager
 import top.e404.edropper.hook.HookManager
-import top.e404.edropper.world.ClipboardManager
+import top.e404.eplugin.EPlugin
 
 class EDropper : EPlugin() {
     override val debugPrefix: String
@@ -26,7 +26,7 @@ class EDropper : EPlugin() {
         Config.load(null)
         Lang.load(null)
         GameConfigManager.load(null)
-        ClipboardManager.load()
+        SchemGroupManager.load(null)
         Commands.register()
         HookManager.register()
         info("&a加载完成")

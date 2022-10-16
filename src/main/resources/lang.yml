@@ -12,6 +12,9 @@ hook:
   enable: "扫描到依赖{plugin}, 已启用相关支持"
   disable: "未扫描到依赖{plugin}, 已禁用相关支持"
 
+game:
+  prevent_teleport: "&c禁止的传送类型"
+
 command:
   reload_done: "&a重载完成"
 

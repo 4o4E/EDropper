@@ -1,7 +1,7 @@
-# 地图组名
+# 原理图组名
 example_group:
   # 是否允许重复
-  allow_repeat: true
+  repeat: true
   # 原理图
   schematics:
     # 文件名: 权重
@@ -9,7 +9,7 @@ example_group:
     example2.schem: 30
 
 group1:
-  allow_repeat: true
+  repeat: true
   schematics:
     iron.schem: 1
     golden.schem: 1

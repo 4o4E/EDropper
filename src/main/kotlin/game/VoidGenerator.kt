@@ -1,4 +1,4 @@
-package top.e404.edropper.world
+package top.e404.edropper.game
 
 import org.bukkit.Bukkit
 import org.bukkit.World

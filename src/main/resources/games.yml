@@ -2,16 +2,51 @@
 example_game:
   # 是否允许重复
   repeat: false
-  # 游戏使用的地图数, 若允许重复则总数不足的会重复, 否则每个组最多出现一次
+  # 游戏使用的地图组数, 若允许重复则总数不足的会重复, 否则每个组最多出现一次
   amount: 2
-  # 顶层地图
-  top: example_top.schem
-  # 底层地图
-  bottom: example_bottom.schem
   # 游戏地图组
   group:
-    # 地图组名: 选中的概率
-    example_group: 20
-    group1: 30
-  # 通关分值
-  score: 10
+    # 原理图组名
+    example_group:
+      # 权重
+      weight: 20
+      # 选择的数量
+      count: 10
+    group1:
+      weight: 30
+      count: 10
+  # 游戏开始时传送玩家的坐标点偏移
+  # top中间最低处的坐标的偏移
+  start_location:
+    x: 0
+    y: 3
+    z: 0
+    # 偏移 -180 - 180
+    yaw: 90
+    # 俯仰角 0 - 180
+    pitch: 90
+  # 顶层原理图
+  top: example_top.schem
+  # 底层原理图
+  bottom: example_bottom.schem
+  # 缓冲区原理图
+  buffer: buffer.schem
+  # 缓冲区重复次数
+  buffer_repeat: 10
+  # 跳到其上视作通关的方块
+  target:
+    - OBSIDIAN
+    - NETHERITE_BLOCK
+  command:
+    # 玩家进入游戏时执行的指令
+    enter:
+      - tell %player_name% 你已进入游戏
+    # 玩家开始游戏时执行的指令(跳下)
+    start:
+      - tell %player_name% 你已开始游戏
+    # 玩家失败
+    fail:
+      - tell %player_name% 你失败了
+    # 玩家成功
+    success:
+      - tell %player_name% 你通过了游戏
