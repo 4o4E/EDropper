@@ -18,6 +18,8 @@ repositories {
     // spigot
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://oss.sonatype.org/content/groups/public/")
+    // placeholderAPI
+    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     // engine hub
     maven("https://maven.enginehub.org/repo/")
     // papi
@@ -32,6 +34,9 @@ dependencies {
     implementation(eplugin("core"))
     implementation(eplugin("serialization"))
     implementation(eplugin("hook-worldedit"))
+    implementation(eplugin("hook-placeholderapi"))
+    // placeholderAPI
+    compileOnly("me.clip:placeholderapi:2.11.1")
     // world edit
     compileOnly("com.sk89q.worldedit:worldedit-core:7.2.7")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.7")
