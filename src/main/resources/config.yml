@@ -12,3 +12,12 @@ radius: 64
 
 # 用于游戏的世界名字, 若不存在则会自动生成
 world: game
+
+# 指令黑名单
+# 拥有权限节点 `edropper.bypass.command` 的玩家跳过此检测
+prevent_command:
+  # 设置为true则按阻止玩家使用匹配的指令, 反之则仅允许玩家使用列出的指令
+  is_black: false
+  # 正则列表
+  regexes:
+    - /tp\s+.*

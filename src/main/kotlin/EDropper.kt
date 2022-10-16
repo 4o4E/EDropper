@@ -8,6 +8,7 @@ import top.e404.edropper.config.SchemGroupManager
 import top.e404.edropper.game.ClipboardManager
 import top.e404.edropper.game.GameManager
 import top.e404.edropper.hook.HookManager
+import top.e404.edropper.listener.GameListener
 import top.e404.eplugin.EPlugin
 
 class EDropper : EPlugin() {
@@ -34,6 +35,7 @@ class EDropper : EPlugin() {
         Commands.register()
         HookManager.register()
         GameManager.initWorld()
+        GameManager.startTick()
         info("&a加载完成")
     }
 

@@ -12,7 +12,6 @@ import top.e404.edropper.game.ClipboardManager
 import top.e404.eplugin.config.EMapConfig
 import top.e404.eplugin.config.JarConfig
 import top.e404.eplugin.util.execAsCommand
-import top.e404.eplugin.util.selectByTo
 
 /**
  * 游戏设置管理器
@@ -99,14 +98,7 @@ data class AbsolutelyGameConfig(
     val bufferRepeat: Int,
     val target: MutableList<String>,
     val command: CommandConfig,
-) {
-    /**
-     * 从配置中抽取
-     *
-     * @return 抽中的地图组
-     */
-    fun generator() = group.selectByTo(amount, repeat) { _, cfg -> cfg.weight }
-}
+)
 
 /**
  * 地图组设置, 按照此设置生成地图的一段区域
@@ -143,7 +135,7 @@ data class CommandConfig(
     fun onSuccess(p: Player) = success.exec(p)
 
     private fun List<String>.exec(p: Player) = forEach { cmd ->
-        PlaceholderAPI.setPlaceholders(p, cmd).execAsCommand(p)
+        PlaceholderAPI.setPlaceholders(p, cmd).execAsCommand()
     }
 }
 

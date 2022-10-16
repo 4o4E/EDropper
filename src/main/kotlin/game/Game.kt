@@ -2,9 +2,9 @@ package top.e404.edropper.game
 
 import com.sk89q.worldedit.WorldEdit
 import com.sk89q.worldedit.extent.clipboard.Clipboard
-import org.bukkit.EntityEffect
 import org.bukkit.Location
 import org.bukkit.entity.Player
+import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.potion.PotionEffect
@@ -13,8 +13,8 @@ import top.e404.edropper.PL
 import top.e404.edropper.config.Config
 import top.e404.edropper.config.GameConfig
 import top.e404.edropper.config.Lang
-import top.e404.eplugin.EPlugin.Companion.formatAsConst
 import top.e404.eplugin.hook.worldedit.pasteCenter
+import top.e404.eplugin.util.getBlockUnderFoot
 import top.e404.eplugin.util.select
 
 /**
@@ -122,6 +122,24 @@ class Game private constructor(
     }
 
     /**
+     * 游戏每tick计算
+     */
+    fun onTick() {
+        if (state != GameState.GAMING) return
+        // 落地检测
+        val blocks = p.getBlockUnderFoot()
+        PL.debug { "blocks:\n${blocks.joinToString("\n") { "  ${it.type.name} x: ${it.x}, y: ${it.y} z: ${it.z}" }}" }
+        if (blocks.all { it.isEmpty }) return
+        if (blocks.any { it.type.name in config.target }) {
+            config.command.onSuccess(p)
+            stop()
+            return
+        }
+        config.command.onFail(p)
+        stop()
+    }
+
+    /**
      * 玩家移动时触发
      */
     fun onMove(event: PlayerMoveEvent) {
@@ -135,10 +153,12 @@ class Game private constructor(
             return
         }
         // 开始下落
-        if (state == GameState.PREPARE && to.y < startY) {
-            PL.debug { "开始下落" }
-            state = GameState.GAMING
-            config.command.onStart(p)
+        if (state == GameState.PREPARE) {
+            if (to.y < startY) {
+                PL.debug { "开始下落" }
+                state = GameState.GAMING
+                config.command.onStart(p)
+            }
             return
         }
         // 转场
@@ -163,25 +183,23 @@ class Game private constructor(
             println(l)
             p.teleport(l)
             // 缓降
-            p.addPotionEffect(PotionEffect(
-                PotionEffectType.SLOW_FALLING,
-                20 * 3,
-                0,
-                false,
-                false
-            ))
+            p.addPotionEffect(
+                PotionEffect(
+                    PotionEffectType.SLOW_FALLING,
+                    20 * 3,
+                    0,
+                    false,
+                    false
+                )
+            )
             return
         }
-        val block = p.location.add(0.0, -0.2, 0.0).block
-        if (block.isEmpty) return
-        PL.sendMsgWithPrefix(p, "state: $state, x: ${to.x}, y: ${to.y} z: ${to.z}, block: ${block.type.name}")
-        if (block.type.name.formatAsConst() in config.target) {
-            config.command.onSuccess(p)
-            stop()
-            return
-        }
-        config.command.onFail(p)
-        stop()
+    }
+
+    fun onCommand(event: PlayerCommandPreprocessEvent) {
+        if (!p.hasPermission("edropper.bypass.command")
+            && Config.preventCommand.matches(event.message)
+        ) event.isCancelled = true
     }
 
     /**
@@ -189,10 +207,15 @@ class Game private constructor(
      */
     fun stop() {
         state = GameState.FINISH
-        p.teleport(location)
-        clear()
         GameManager.games.remove(this)
+        p.teleport(location)
+        clear {}
     }
 
-    fun clear() = locations.forEach(GameLocation::clear)
+    fun clear(afterClear: () -> Unit) {
+        PL.runTaskAsync {
+            locations.forEach(GameLocation::clear)
+            PL.runTask(afterClear)
+        }
+    }
 }

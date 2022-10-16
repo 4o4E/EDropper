@@ -5,6 +5,8 @@ import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.WorldCreator
 import org.bukkit.entity.Player
+import org.bukkit.scheduler.BukkitTask
+import top.e404.edropper.PL
 import top.e404.edropper.config.Config
 import java.util.concurrent.ConcurrentHashMap
 import com.sk89q.worldedit.world.World as WeWorld
@@ -14,37 +16,20 @@ object GameManager {
     lateinit var weWorld: WeWorld
 
     val games = mutableSetOf<Game>()
+    lateinit var task: BukkitTask
+
+    fun startTick() {
+        task = PL.runTaskTimer(1, 1) {
+            games.forEach(Game::onTick)
+        }
+    }
 
     operator fun get(p: Player) = games.firstOrNull { it.p == p }
 
-    // 区域及占用该区域的游戏
-    val locations = ConcurrentHashMap<GameLocation, Game>()
-
     /**
-     * 查找未占用的区域
-     *
-     * @return 区域坐标
+     * 区域及占用该区域的游戏
      */
-    fun getFreeLocation(): GameLocation {
-        var i = 0
-        while (true) {
-            if (i == 0) {
-                val key = GameLocation(0, 0)
-                if (!locations.containsKey(key)) return key
-            }
-            for (x in -i..i) for (y in -i..i) {
-                if (x != -i
-                    && x != i
-                    && y != -i
-                    && y != i
-                ) continue
-                val key = GameLocation(x, y)
-                if (locations.containsKey(key)) continue
-                return key
-            }
-            i++
-        }
-    }
+    val locations = ConcurrentHashMap<GameLocation, Game>()
 
     /**
      * 查找未占用的区域, 并直接占用

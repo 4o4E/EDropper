@@ -4,7 +4,6 @@ main: top.e404.edropper.EDropper
 api-version: 1.13
 depend:
   - WorldEdit
-softdepend:
   - PlaceholderAPI
 authors:
   - 404E
@@ -17,3 +16,6 @@ permissions:
   edropper.admin:
     default: op
     description: 允许使用插件指令
+  edropper.bypass.command:
+    default: false
+    description: 允许使用在游戏中使用指令
