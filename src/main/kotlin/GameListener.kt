@@ -16,7 +16,4 @@ object GameListener : EListener(PL) {
     fun PlayerQuitEvent.onEvent() {
         GameManager[player]?.stop()
     }
-
-    @EventHandler
-    fun
 }

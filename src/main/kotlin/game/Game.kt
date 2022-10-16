@@ -21,11 +21,21 @@ import top.e404.eplugin.util.select
  * @property location 玩家进入游戏前的位置
  * @param gameConfig 对应的游戏设置
  */
-class Game(
+class Game private constructor(
     val p: Player,
-    val location: Location,
     gameConfig: GameConfig
 ) {
+    companion object {
+        @JvmStatic
+        fun create(p: Player, config: GameConfig): Game {
+            GameManager[p]?.let { return it }
+            return Game(p, config).also {
+                GameManager.games.add(it)
+            }
+        }
+    }
+
+    val location = p.location
     var state = GameState.INITIALIZATION
 
     /**
@@ -107,14 +117,17 @@ class Game(
      * 玩家移动时触发
      */
     fun onMove(event: PlayerMoveEvent) {
-        if (state.listen) return
+        if (!state.listen) return
+        PL.sendMsgWithPrefix(p, "state: $state, listen: ${state.listen} startY: $startY")
         val to = event.to ?: return
+        // 阻止跨世界传送
         if (event is PlayerTeleportEvent && event.to!!.world != event.from.world) {
             event.isCancelled = true
             PL.sendMsgWithPrefix(p, Lang["game.prevent_teleport"])
             return
         }
-        if (state == GameState.PREPARE && to.y <= startY) {
+        // 开始下落
+        if (state == GameState.PREPARE && to.y < startY) {
             state = GameState.GAMING
             config.command.onStart(p)
             return

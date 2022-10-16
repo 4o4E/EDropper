@@ -77,6 +77,9 @@ object GameManager {
         }
     }
 
+    /**
+     * 初始化世界
+     */
     fun initWorld() {
         world = Bukkit.createWorld(WorldCreator(Config.world).apply {
             generator(VoidGenerator)
@@ -84,11 +87,7 @@ object GameManager {
         weWorld = BukkitAdapter.adapt(world)
     }
 
-    fun createGame() {
-
-    }
-
-    fun closeGame(game: Game) {
-        game.locations.forEach(GameLocation::clear)
+    fun shutdown() {
+        games.toList().forEach(Game::stop)
     }
 }

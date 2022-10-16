@@ -46,6 +46,7 @@ data class GameConfig(
     val repeat: Boolean,
     val amount: Int,
     val group: MutableMap<String, MapGroupConfig>,
+    @SerialName("start_location")
     val startLocation: StartLocation,
     val top: String,
     val bottom: String,

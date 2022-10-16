@@ -16,8 +16,8 @@ import top.e404.eplugin.util.selectByTo
  */
 object SchemGroupManager : EMapConfig<String, SchemGroup>(
     plugin = PL,
-    path = "games.yml",
-    default = JarConfig(PL, "games.yml"),
+    path = "group.yml",
+    default = JarConfig(PL, "group.yml"),
     kSerializer = String.serializer(),
     vSerializer = SchemGroup.serializer(),
     format = Yaml.default,

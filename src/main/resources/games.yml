@@ -11,10 +11,10 @@ example_game:
       # 权重
       weight: 20
       # 选择的数量
-      count: 10
+      amount: 10
     group1:
       weight: 30
-      count: 10
+      amount: 10
   # 游戏开始时传送玩家的坐标点偏移
   # top中间最低处的坐标的偏移
   start_location:
