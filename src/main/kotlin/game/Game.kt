@@ -12,18 +12,19 @@ import top.e404.edropper.config.GameConfig
 import top.e404.edropper.config.Lang
 import top.e404.eplugin.EPlugin.Companion.formatAsConst
 import top.e404.eplugin.hook.worldedit.pasteCenter
+import top.e404.eplugin.util.select
 
 /**
  * 代表一场游戏
  *
  * @property p 参加游戏的玩家
  * @property location 玩家进入游戏前的位置
- * @param config 对应的游戏设置
+ * @param gameConfig 对应的游戏设置
  */
 class Game(
     val p: Player,
     val location: Location,
-    config: GameConfig
+    gameConfig: GameConfig
 ) {
     var state = GameState.INITIALIZATION
 
@@ -42,7 +43,7 @@ class Game(
     /**
      * 游戏设置
      */
-    val cfg = config.absolute
+    val config = gameConfig.absolute
 
     /**
      * 生成地图所使用的原理图列表, 通过设置生成游戏对应的原理图列表
@@ -50,17 +51,19 @@ class Game(
     val list by lazy {
         ArrayList<Clipboard>().also { list ->
             // 最上方
-            list.add(cfg.top)
+            list.add(config.top)
             // 缓冲区
-            repeat(cfg.bufferRepeat) { list.add(cfg.buffer) }
-            cfg.group.forEach { (schem, cfg) ->
+            repeat(config.bufferRepeat) { list.add(config.buffer) }
+            config.group.select(config.amount, config.repeat) { _, v ->
+                v.weight
+            }.forEach { (schem, mapGroupConfig) ->
                 // 段
-                list.addAll(schem.absolute.select(cfg.amount))
+                list.addAll(schem.absolute.select(mapGroupConfig.amount))
                 // 缓冲区
-                repeat(this.cfg.bufferRepeat) { list.add(this.cfg.buffer) }
+                repeat(config.bufferRepeat) { list.add(config.buffer) }
             }
             // 最下方
-            list.add(cfg.bottom)
+            list.add(config.bottom)
         }
     }
 
@@ -70,10 +73,10 @@ class Game(
     /**
      * 准备游戏地图
      */
-    fun initialize() {
+    fun start() {
         var y = Config.highest
         var location = applyLocation()
-        val l = cfg.startLocation
+        val l = config.startLocation
         startY = (Config.highest - list.first().dimensions.y + l.y).toInt()
         val startLocation = Location(
             GameManager.world,
@@ -96,7 +99,7 @@ class Game(
             }
         }
         p.teleport(startLocation)
-        cfg.command.onStart(p)
+        config.command.onEnter(p)
         state = GameState.PREPARE
     }
 
@@ -113,16 +116,17 @@ class Game(
         }
         if (state == GameState.PREPARE && to.y <= startY) {
             state = GameState.GAMING
+            config.command.onStart(p)
             return
         }
         val block = p.location.add(0.0, -0.2, 0.0).block
         if (block.isEmpty) return
-        if (block.type.name.formatAsConst() in cfg.target) {
-            cfg.command.onSuccess(p)
+        if (block.type.name.formatAsConst() in config.target) {
+            config.command.onSuccess(p)
             stop()
             return
         }
-        cfg.command.onFail(p)
+        config.command.onFail(p)
         stop()
     }
 

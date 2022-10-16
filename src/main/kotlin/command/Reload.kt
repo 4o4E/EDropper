@@ -1,13 +1,13 @@
 package top.e404.edropper.command
 
 import org.bukkit.command.CommandSender
-import top.e404.eplugin.EPlugin.Companion.color
-import top.e404.eplugin.command.ECommand
 import top.e404.edropper.PL
 import top.e404.edropper.config.Config
 import top.e404.edropper.config.GameConfigManager
 import top.e404.edropper.config.Lang
-import top.e404.edropper.world.ClipboardManager
+import top.e404.edropper.config.SchemGroupManager
+import top.e404.eplugin.EPlugin.Companion.color
+import top.e404.eplugin.command.ECommand
 
 object Reload : ECommand(
     PL,
@@ -24,7 +24,7 @@ object Reload : ECommand(
             Config.load(null)
             Lang.load(null)
             GameConfigManager.load(null)
-            ClipboardManager.load()
+            SchemGroupManager.load(null)
             plugin.sendMsgWithPrefix(sender, Lang["command.reload_done"])
         }
     }
