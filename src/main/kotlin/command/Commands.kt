@@ -8,6 +8,5 @@ object Commands : ECommandManager(
     "edropper",
     Debug,
     Reload,
-    Test,
-    StopAll
+    Start,
 )

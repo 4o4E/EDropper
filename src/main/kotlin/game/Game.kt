@@ -88,15 +88,17 @@ class Game private constructor(
 
     var startY: Int = 0
 
+    lateinit var startLocation: Location
+
     /**
      * 准备游戏地图
      */
-    fun start() {
+    fun complete() {
         var y = Config.highest
         var location = applyLocation()
         val l = config.startLocation
         startY = (Config.highest - list.first().dimensions.y + l.y).toInt()
-        val startLocation = Location(
+        startLocation = Location(
             GameManager.world,
             location.centerX + l.x,
             Config.highest - list.first().dimensions.y + l.y,
@@ -116,6 +118,12 @@ class Game private constructor(
                 }
             }
         }
+    }
+
+    /**
+     * 玩家入场
+     */
+    fun start() {
         p.teleport(startLocation)
         config.command.onEnter(p)
         state = GameState.PREPARE

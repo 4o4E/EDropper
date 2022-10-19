@@ -23,9 +23,11 @@ game:
 
 command:
   reload_done: "&a重载完成"
+  invalid_player: "&c玩家离线或不存在"
+  invalid_game_config: "&c不存在此游戏预设: {game}"
+  start_game: "&a游戏开始"
 
   usage:
     debug: "&a/ed debug &f切换debug消息的接受与否"
     reload: "&a/ed reload &f重载配置文件"
-    test: "&a/ed test &f测试"
-    stopall: "&a/ed stopall &f停止所有现有游戏"
+    start: "&a/ed start <玩家> <游戏预设> &f使玩家进入并开始游戏"
